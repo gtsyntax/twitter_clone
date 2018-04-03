@@ -1,5 +1,9 @@
 // getting the mongoose library
 const mongoose = require('mongoose');
+// this is needed for password encryption
+const bcrypt = require('bcrypt-nodejs');
+// this is needed for image
+const crypto = require('crypto');
 // needed for creating the user schema
 const Schema = mongoose.Schema;
 
@@ -13,5 +17,31 @@ const UserSchema = new Schema({
 		tweet: { type: Schema.Types.ObjectId, ref: 'Tweet'}
 	}]
 });
+
+UserSchema.pre('save', function(){
+	var user = this;
+	if (!user.isModified('password')) return next();
+	if (user.password) {
+		bcrypt.genSalt(10, function(err, salt) {
+			if (err) return next(err);
+			bcrypt.hash(user.password, salt, null, function(err, hash) {
+				if (err) return next();
+				user.password = hash;
+				next(err);
+			});
+		});
+	}
+});
+
+UserSchema.methods.gravatar = function(size) {
+	if (!size) size = 200;
+	if (!this.email) return 'https://gravatar.com/avatar/?s=' + size + '&d=retro';
+	var md5 = crypto.createHash('md5').updated(this.email).digest('hex');
+	return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
+};
+
+UserSchema.methods.comparePassword = function(password) {
+	return bcrypt.compareSync(password, this.password)
+}
 
 module.exports = mongoose.model('User', UserSchema);
