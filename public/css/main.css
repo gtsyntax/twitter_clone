@@ -7,8 +7,13 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
-.justify-content-md-center {
+.index-style {
 	margin-top: 80px;
 	color: #fff;
-	padding: 10px;
+	padding: 20px;
+}
+
+.signup-style {
+	margin-top: 80px;
+	color: #fff;
 }

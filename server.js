@@ -37,7 +37,11 @@ app.use(flash());
 
 // app route
 const mainRoutes = require('./routes/main');
+const userRoutes = require('./routes/user');
+
 app.use(mainRoutes);
+app.use(userRoutes);
+
 
 app.listen(port, (err) => {
 	if (err) {
