@@ -4,9 +4,17 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const hbs = require('hbs');
 const expressHbs = require('express-handlebars');
+const config = require('./config/secret');
 const port = process.env.PORT || 3030;
 
+
 const app = express();
+
+// mongoose configuration
+mongoose.connect(config.database, function(err){
+	if (err) console.log(err);
+	console.log("connected to the database");
+});
 
 // app middlewares
 app.engine('.hbs', expressHbs({ defaultLayout: 'layout', extname: '.hbs'}));
